@@ -4,6 +4,7 @@ import pandas as pd
 
 from lstm import create_train_and_test, create_model
 from plot import analyze_and_plot_results
+from keras_to_tf import convert_modle
 
 # For reproducibility
 np.random.seed(1234)
@@ -67,6 +68,14 @@ results_csv_path = os.path.join(output_dir, input_csv)
 df = pd.DataFrame(data={'timestamps': timestamps, 'y_true': y_true,
                         'y_test': y_test, 'y_pred': y_pred})
 df.to_csv(results_csv_path, index=False)
+
+# save mdoel
+print("Saving model...")
+results_model_path = os.path.join(output_dir, 'my_model.h5')
+model.save(results_model_path)
+
+print("Conver model to pb file...")
+convert_modle(output_dir, output_dir, 'my_model.h5', 'my_model.pb')
 
 # Extract anomalies from predictions and plot results.
 print("Plotting...")
