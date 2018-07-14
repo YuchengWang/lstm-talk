@@ -5,6 +5,11 @@ import pandas as pd
 from lstm import create_train_and_test, create_model
 from plot import analyze_and_plot_results
 from keras_to_tf import convert_modle
+from time import time
+
+from keras.models import Sequential
+from keras.layers import Dense, Activation
+from keras.callbacks import TensorBoard
 
 # For reproducibility
 np.random.seed(1234)
@@ -46,9 +51,11 @@ X_train, y_train, X_test, y_test = create_train_and_test(
 # Create LSTM model
 model = create_model(sequence_length=sequence_length, layers=layers)
 
+tensorboard = TensorBoard(log_dir="results/{}".format(time()))
+
 # Train model
 history = model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs,
-                    validation_split=0.0)
+                    validation_split=0.0, callbacks=[tensorboard])
 
 # Save history.
 df = pd.DataFrame(data={'epochs': range(epochs),
@@ -59,8 +66,10 @@ df.to_csv(history_csv_path, index=False)
 # Predict values.
 print("Predicting...")
 y_pred = model.predict(X_test)
+print y_pred.size
 print("Reshaping...")
 y_pred = np.reshape(y_pred, (y_pred.size,))
+print y_pred.shape
 
 # Save results.
 print("Saving...")

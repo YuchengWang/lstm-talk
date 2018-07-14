@@ -29,6 +29,8 @@ def freeze_session(session, keep_var_names=None, output_names=None, clear_device
         freeze_var_names = list(set(v.op.name for v in tf.global_variables()).difference(keep_var_names or []))
         output_names = output_names or []
         output_names += [v.op.name for v in tf.global_variables()]
+        print output_names
+        print freeze_var_names
         input_graph_def = graph.as_graph_def()
         if clear_devices:
             for node in input_graph_def.node:

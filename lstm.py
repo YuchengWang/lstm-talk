@@ -53,6 +53,7 @@ def create_model(sequence_length, layers):
     model.add(Activation("linear"))
 
     model.compile(loss="mse", optimizer="rmsprop")
+
     return model
 
 
